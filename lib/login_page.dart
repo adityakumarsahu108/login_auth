@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'forgot_password_page.dart';
+import './pages/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
@@ -16,9 +16,22 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   Future signIn() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.deepPurple,
+              backgroundColor: Colors.grey[200],
+            ),
+          );
+        });
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop();
   }
 
   @override
@@ -48,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 40,
               ),
               //hello
-              const Text('HELLO AGAIN!',
+              const Text('HELLO THERE!',
                   style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold)),
 
               const Text(
@@ -102,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -128,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -153,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
 
               Row(
@@ -161,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   const Text(
                     'Not a member?',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   const SizedBox(
                     width: 10,
@@ -171,7 +184,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       'register now',
                       style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                   ),
                 ],

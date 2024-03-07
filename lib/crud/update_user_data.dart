@@ -108,8 +108,6 @@ class UpdateUserDataDialogState extends State<UpdateUserDataDialog> {
             String lastName = _lastnameController.text.trim();
             int age = int.tryParse(_ageController.text.trim()) ?? 0;
 
-            
-
             // Check if the user is authenticated
             if (FirebaseAuth.instance.currentUser != null) {
               User? user = FirebaseAuth.instance.currentUser;
@@ -119,14 +117,19 @@ class UpdateUserDataDialogState extends State<UpdateUserDataDialog> {
                 await FirebaseFirestore.instance
                     .collection('users')
                     .doc(widget.currentUserDocId)
-                    .update({
-                  'first name': firstName,
-                  'last name': lastName,
-                  'age': age,
-                });
+                    .update(
+                  {
+                    'first name': firstName,
+                    'last name': lastName,
+                    'age': age,
+                  },
+                );
+                CircularProgressIndicator(
+                  color: Colors.deepPurple,
+                  backgroundColor: Colors.grey[200],
+                );
                 await user?.reload();
 
-                
                 Navigator.pop(context);
               } catch (e) {
                 print('Error updating user: $e');

@@ -61,7 +61,12 @@ class HomePageState extends State<HomePage> {
         stream: userStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.deepPurple,
+                backgroundColor: Colors.grey[200],
+              ),
+            );
           }
 
           if (snapshot.hasError) {
@@ -77,14 +82,34 @@ class HomePageState extends State<HomePage> {
             itemCount: documents.length,
             itemBuilder: (context, index) {
               String documentId = documents[index].id;
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  onTap: () {
-                    showUpdateDialog(context, documentId);
-                  },
-                  title: GetUserName(documentId: documentId),
-                  tileColor: Colors.grey[300],
+              //delete operation via sliding
+              return Dismissible(
+                key: Key(documentId),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+                onDismissed: (direction) {
+                  // Remove the item from the database
+                  FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(documentId)
+                      .delete();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    onTap: () {
+                      showUpdateDialog(context, documentId);
+                    },
+                    title: GetUserName(documentId: documentId),
+                    tileColor: Colors.grey[300],
+                  ),
                 ),
               );
             },
